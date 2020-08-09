@@ -3,11 +3,11 @@ Contributors: Pierre Lebedel
 Tags: posts, like, dislike, voting, vote
 Requires at least: 4.0
 Tested up to: 4.5.0
-Stable tag: 2.4.2
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A simple AJaX based WordPress Plugin which allows your visitors to like or dislike posts, pages and cutom post types. 
+A simple AJaX based WordPress Plugin which allows your visitors to like or dislike posts, pages and cutom post types.
 
 == Description ==
 The Kodex Posts likes plugin allows your visitors and logged in users to like or dislike your posts, pages, and custom post types.
@@ -46,12 +46,12 @@ In the admin interface, columns are showing the actual count, and there is a met
 * Save post action counter fix (counters began to 1)
 * Sortable posts by like/dislike count in admin area
 * Admin columns style and position
- 
+
 = 2.2.0 =
 * Buttons and Counter shortcodes takes postid parameter for a display outside the loop
 * Counter shortcode takes format parameter : html|number
 * Changes in the admin settings area
 * Screenshots update
- 
+
 = 2.1.0 =
 * Source code based on WordPress Plugin Boilerplate

@@ -162,8 +162,8 @@ class Kodex_Posts_Likes_Public {
 		$post_id      = $_REQUEST['post_id'];
 		$action       = $_REQUEST['btn_action'];
 		$nonce        = $_REQUEST['nonce'];
-		$like_text    = $_REQUEST['like_text'];
-		$dislike_text = $_REQUEST['dislike_text'];
+		$like_text    = wp_unslash($_REQUEST['like_text']);
+		$dislike_text = wp_unslash($_REQUEST['dislike_text']);
 
 		$this->vote($post_id, $action, $nonce);
 
