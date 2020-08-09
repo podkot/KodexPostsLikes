@@ -5,7 +5,7 @@ class Kodex_Posts_Likes_Public {
 	private $plugin_title;
 	private $plugin_name;
 	private $version;
-	
+
 	public $options;
 
 	public function __construct( $plugin_title, $plugin_name, $version ) {
@@ -135,7 +135,7 @@ class Kodex_Posts_Likes_Public {
 		}
 
 		$html .= wp_nonce_field('kodex_posts_likes', 'nonce', true, false);
-		
+
 		return $html;
 	}
 
@@ -159,15 +159,17 @@ class Kodex_Posts_Likes_Public {
 	}
 
 	public function ajax(){
-		$post_id = $_REQUEST['post_id'];
-		$action  = $_REQUEST['btn_action'];
-		$nonce   = $_REQUEST['nonce'];
-		
+		$post_id      = $_REQUEST['post_id'];
+		$action       = $_REQUEST['btn_action'];
+		$nonce        = $_REQUEST['nonce'];
+		$like_text    = $_REQUEST['like_text'];
+		$dislike_text = $_REQUEST['dislike_text'];
+
 		$this->vote($post_id, $action, $nonce);
 
 		// on recherche les boutons pour les injecter dans le html après la réponse ajax
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ){
-			$html = $this->buttons($post_id);
+			$html = $this->buttons($post_id, $like_text, $dislike_text);
 			die($html);
 		}
 	}
