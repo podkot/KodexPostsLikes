@@ -1,6 +1,7 @@
 <?php
 
-class Kodex_Posts_Likes_Public {
+class Kodex_Posts_Likes_Public
+{
 
 	private $plugin_title;
 	private $plugin_name;
@@ -8,7 +9,8 @@ class Kodex_Posts_Likes_Public {
 
 	public $options;
 
-	public function __construct( $plugin_title, $plugin_name, $version ) {
+	public function __construct($plugin_title, $plugin_name, $version)
+	{
 
 		$this->plugin_title = $plugin_title;
 		$this->plugin_name  = $plugin_name;
@@ -16,41 +18,47 @@ class Kodex_Posts_Likes_Public {
 		$this->set_options();
 	}
 
-	public function set_options(){
+	public function set_options()
+	{
 		$this->defaults = Kodex_Posts_Likes::get_defaults();
 		$defaults = array();
-		foreach($this->defaults as $k=>$v){
+		foreach ($this->defaults as $k => $v) {
 			$defaults[$k] = $v['value'];
 		}
 		$this->options = array_merge($defaults, (array) get_option($this->plugin_name, $defaults));
 	}
 
-	public function get_option($name){
+	public function get_option($name)
+	{
 		return (isset($this->options[$name])) ? $this->options[$name] : false;
 	}
 
-	public function get_user_identifier(){
-		if( is_user_logged_in() ){
+	public function get_user_identifier()
+	{
+		if (is_user_logged_in()) {
 			$code = get_current_user_id();
-		}else{
+		} else {
 			$code = $_SERVER['REMOTE_ADDR'];
 		}
 		return md5($code);
 	}
 
-	public function enqueue_styles() {
-		if( $this->get_option('include_css') ){
-	    	wp_enqueue_style('dashicons');
-	    	wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/kodex-posts-likes-public.css', array(), $this->version, 'all' );
-	    }
+	public function enqueue_styles()
+	{
+		if ($this->get_option('include_css')) {
+			wp_enqueue_style('dashicons');
+			wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/kodex-posts-likes-public.css', array(), $this->version, 'all');
+		}
 	}
 
-	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/kodex-posts-likes-public.js', array( 'jquery' ), $this->version, false );
-		wp_localize_script($this->plugin_name, 'kodex_posts_likes', array('ajaxurl'=>admin_url('admin-ajax.php')) );
+	public function enqueue_scripts()
+	{
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/kodex-posts-likes-public.js', array('jquery'), $this->version, false);
+		wp_localize_script($this->plugin_name, 'kodex_posts_likes', array('ajaxurl' => admin_url('admin-ajax.php')));
 	}
 
-	public function shortcode_buttons($atts=array()){
+	public function shortcode_buttons($atts = array())
+	{
 		//$post_id = get_the_ID();
 		//$post_type = get_post_type($post_id);
 		$a = shortcode_atts(array(
@@ -67,15 +75,16 @@ class Kodex_Posts_Likes_Public {
 
 		$html = '';
 		//debug($this->get_option('post_types'));
-		if(in_array($post_type, $this->get_option('post_types'))){
-			$html .= '<div class="kodex_buttons" style="text-align:'.$this->get_option('alignement').';">';
+		if (in_array($post_type, $this->get_option('post_types'))) {
+			$html .= '<div class="kodex_buttons" style="text-align:' . $this->get_option('alignement') . ';">';
 			$html .= $this->buttons($post_id, $custom_liketext, $custom_disliketext);
 			$html .= '</div>';
 		}
 		return $html;
 	}
 
-	public function shortcode_count($atts=array()){
+	public function shortcode_count($atts = array())
+	{
 		//$post_id = get_the_ID();
 		//$count = (int) get_post_meta($post_id, 'kodex_post_likes_count', true);
 		$a = shortcode_atts(array(
@@ -87,18 +96,19 @@ class Kodex_Posts_Likes_Public {
 		$format  = $a['format'];
 		$count   = (int) get_post_meta($post_id, 'kodex_post_likes_count', true);
 
-		if($format=='number'){
+		if ($format == 'number') {
 			return $count;
-		}else{
+		} else {
 			$html = '';
-			if($count>0){
-				$html = '<div class="kodex_likes_count"><span>'.$count.'</span></div>';
+			if ($count > 0) {
+				$html = '<div class="kodex_likes_count"><span>' . $count . '</span></div>';
 			}
 			return $html;
 		}
 	}
 
-	private function buttons($post_id, $custom_liketext=false, $custom_disliketext=false){
+	private function buttons($post_id, $custom_liketext = false, $custom_disliketext = false)
+	{
 		$html = '';
 		$ident       = $this->get_user_identifier();
 
@@ -107,30 +117,34 @@ class Kodex_Posts_Likes_Public {
 		$like_active = (isset($pm_likes_a[$ident])) ? ' kodex_button_active' : '';
 		$like_count  = count($pm_likes_a);
 		$like_text   = ($custom_liketext) ? $custom_liketext : $this->get_option('like_text');
-		$html .= '<button type="button" class="kodex_button kodex_like_button'.$like_active.'" data-id="'.$post_id.'" data-action="like">
+		$html .= '<button type="button" class="kodex_button kodex_like_button' . $like_active . '" data-id="' . $post_id . '" data-action="like">
 			<span class="icon"></span>';
-			$html .= (!empty($like_text)) ? '<span class="text">'.$like_text.'</span>' : '';
-			if( ($this->get_option('hide_counter_0') && $like_count==0) || $this->get_option('hide_counter_total') ){
-				// on n'affiche pas le compteur
-			}else{
-				$html .= '<span class="counter">'.$like_count.'</span>';
-			}
+		$html .= (!empty($like_text)) ? '<span class="text">' . $like_text . '</span>' : '';
+		if ($this->get_option('hide_counter_0') && $like_count == 0) {
+			$html .= '<span class="counter counter_hide_0"></span>';
+		} elseif ($this->get_option('hide_counter_total')) {
+			// on n'affiche pas le compteur
+		} else {
+			$html .= '<span class="counter">' . $like_count . '</span>';
+		}
 		$html .= '</button>';
 
-		if( $this->get_option('show_dislike') ){
+		if ($this->get_option('show_dislike')) {
 			$pm_dislikes    = get_post_meta($post_id, 'kodex_post_dislikes', true);
 			$pm_dislikes_a  = (empty($pm_dislikes)) ? array() : $pm_dislikes;
 			$dislike_active = (isset($pm_dislikes_a[$ident])) ? ' kodex_button_active' : '';
 			$dislike_count  = count($pm_dislikes_a);
 			$dislike_text   = ($custom_disliketext) ? $custom_disliketext : $this->get_option('dislike_text');
-			$html .= '<button type="button" class="kodex_button kodex_dislike_button'.$dislike_active.'" data-id="'.$post_id.'" data-action="dislike">
+			$html .= '<button type="button" class="kodex_button kodex_dislike_button' . $dislike_active . '" data-id="' . $post_id . '" data-action="dislike">
 				<span class="icon"></span>';
-				$html .= (!empty($dislike_text)) ? '<span class="text">'.$dislike_text.'</span>' : '';
-				if( ($this->get_option('hide_counter_0') && $dislike_count==0) || $this->get_option('hide_counter_total') ){
-					// on n'affiche pas le compteur
-				}else{
-					$html .= '<span class="counter">'.$dislike_count.'</span>';
-				}
+			$html .= (!empty($dislike_text)) ? '<span class="text">' . $dislike_text . '</span>' : '';
+			if ($this->get_option('hide_counter_0') && $dislike_count == 0) {
+				$html .= '<span class="counter counter_hide_0"></span>';
+			} elseif ($this->get_option('hide_counter_total')) {
+				// on n'affiche pas le compteur
+			} else {
+				$html .= '<span class="counter">' . $dislike_count . '</span>';
+			}
 			$html .= '</button>';
 		}
 
@@ -139,65 +153,65 @@ class Kodex_Posts_Likes_Public {
 		return $html;
 	}
 
-	public function before_after_content($content){
+	public function before_after_content($content)
+	{
 		$post_id = get_the_ID();
 		$post_type = get_post_type($post_id);
 
 		$buttons_position = $this->get_option('include_in_post');
 		$before = $after = '';
 
-		if(in_array($post_type, $this->get_option('post_types'))){
-			if( $buttons_position=='top' || $buttons_position=='both' ){
+		if (in_array($post_type, $this->get_option('post_types'))) {
+			if ($buttons_position == 'top' || $buttons_position == 'both') {
 				$before = $this->shortcode_buttons();
 			}
-			if( $buttons_position=='bottom' || $buttons_position=='both' ){
+			if ($buttons_position == 'bottom' || $buttons_position == 'both') {
 				$after = $this->shortcode_buttons();
 			}
 		}
-		$fullcontent = $before.$content.$after;
+		$fullcontent = $before . $content . $after;
 		return $fullcontent;
 	}
 
-	public function ajax(){
+	public function ajax()
+	{
 		$post_id      = $_REQUEST['post_id'];
 		$action       = $_REQUEST['btn_action'];
 		$nonce        = $_REQUEST['nonce'];
-		$like_text    = wp_unslash($_REQUEST['like_text']);
-		$dislike_text = wp_unslash($_REQUEST['dislike_text']);
 
-		$this->vote($post_id, $action, $nonce);
+		$data = $this->vote($post_id, $action, $nonce);
 
 		// on recherche les boutons pour les injecter dans le html après la réponse ajax
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ){
-			$html = $this->buttons($post_id, $like_text, $dislike_text);
-			die($html);
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			wp_send_json_success($data);
 		}
 	}
 
-	public function vote($post_id, $action, $nonce){
+	public function vote($post_id, $action, $nonce)
+	{
 		$pm_likes    = get_post_meta($post_id, 'kodex_post_likes', true);
-		if(!$pm_likes) $pm_likes = array();
+		if (!$pm_likes) $pm_likes = array();
 		$pm_dislikes = get_post_meta($post_id, 'kodex_post_dislikes', true);
-		if(!$pm_dislikes) $pm_dislikes = array();
+		if (!$pm_dislikes) $pm_dislikes = array();
 		$ident       = $this->get_user_identifier();
 
 		// likes
-		if($action=='like'){
-			if(isset($pm_likes[$ident])){
+		if ($action == 'like') {
+			if (isset($pm_likes[$ident])) {
 				unset($pm_likes[$ident]);
-			}else{
-				if(isset($pm_dislikes[$ident])){
+			} else {
+				if (isset($pm_dislikes[$ident])) {
 					unset($pm_dislikes[$ident]);
 				}
 				$pm_likes[$ident] = time();
 			}
 
-		// dislikes
-		}else{
-			if(isset($pm_dislikes[$ident])){
+			// dislikes
+		} else {
+			if (isset($pm_dislikes[$ident])) {
 				unset($pm_dislikes[$ident]);
-			}else{
-				if(isset($pm_likes[$ident])){
+			} else {
+				if (isset($pm_likes[$ident])) {
 					unset($pm_likes[$ident]);
 				}
 				$pm_dislikes[$ident] = time();
@@ -205,13 +219,20 @@ class Kodex_Posts_Likes_Public {
 		}
 
 		$test = wp_verify_nonce($nonce, 'kodex_posts_likes');
-		if($test){
+		if ($test) {
 			update_post_meta($post_id, 'kodex_post_likes', $pm_likes);
 			update_post_meta($post_id, 'kodex_post_dislikes', $pm_dislikes);
 
 			update_post_meta($post_id, 'kodex_post_likes_count', count($pm_likes));
 			update_post_meta($post_id, 'kodex_post_dislikes_count', count($pm_dislikes));
 		}
-	}
 
+		return [
+			'likes'    => count($pm_likes),
+			'dislikes' => count($pm_dislikes),
+			'liked'    => isset($pm_likes[$ident]),
+			'disliked' => isset($pm_dislikes[$ident]),
+			'nonce_error' => !$test,
+		];
+	}
 }
