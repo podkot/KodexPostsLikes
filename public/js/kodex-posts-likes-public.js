@@ -32,14 +32,9 @@ jQuery(function ($) {
 				var active_class = 'kodex_button_active';
 				var hide_0_class = 'counter_hide_0';
 
-				if (response.data.liked) {
-					like_button.addClass(active_class);
-					dislike_button.removeClass(active_class);
-				}
-				if (response.data.disliked) {
-					like_button.removeClass(active_class);
-					dislike_button.addClass(active_class);
-				}
+				like_button.toggleClass(active_class, response.data.liked);
+				dislike_button.toggleClass(active_class, response.data.disliked);
+
 				var like_counter = like_button.find('.counter');
 				if (like_counter.length) {
 					var likes = response.data.likes;
