@@ -41,18 +41,22 @@ jQuery(function ($) {
 					dislike_button.addClass(active_class);
 				}
 				var like_counter = like_button.find('.counter');
-				var likes = response.data.likes;
-				if (like_counter.hasClass(hide_0_class) && likes == 0) {
-					likes = '';
+				if (like_counter.length) {
+					var likes = response.data.likes;
+					if (like_counter.hasClass(hide_0_class) && likes == 0) {
+						likes = '';
+					}
+					like_counter.text(likes);
 				}
-				like_counter.text(likes);
 
 				var dislike_counter = dislike_button.find('.counter');
-				var dislikes = response.data.dislikes;
-				if (dislike_counter.hasClass(hide_0_class) && dislikes == 0) {
-					dislikes = '';
+				if (dislike_counter.length) {
+					var dislikes = response.data.dislikes;
+					if (dislike_counter.hasClass(hide_0_class) && dislikes == 0) {
+						dislikes = '';
+					}
+					dislike_counter.text(dislikes);
 				}
-				dislike_counter.text(dislikes);
 			}
 		});
 	});

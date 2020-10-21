@@ -120,12 +120,13 @@ class Kodex_Posts_Likes_Public
 		$html .= '<button type="button" class="kodex_button kodex_like_button' . $like_active . '" data-id="' . $post_id . '" data-action="like">
 			<span class="icon"></span>';
 		$html .= (!empty($like_text)) ? '<span class="text">' . $like_text . '</span>' : '';
+		$counter = '<span class="counter' . ($this->get_option('hide_counter_0') ? ' counter_hide_0' : '') . '">';
 		if ($this->get_option('hide_counter_0') && $like_count == 0) {
-			$html .= '<span class="counter counter_hide_0"></span>';
+			$html .= $counter . '</span>';
 		} elseif ($this->get_option('hide_counter_total')) {
 			// on n'affiche pas le compteur
 		} else {
-			$html .= '<span class="counter">' . $like_count . '</span>';
+			$html .= $counter . $like_count . '</span>';
 		}
 		$html .= '</button>';
 
@@ -139,11 +140,11 @@ class Kodex_Posts_Likes_Public
 				<span class="icon"></span>';
 			$html .= (!empty($dislike_text)) ? '<span class="text">' . $dislike_text . '</span>' : '';
 			if ($this->get_option('hide_counter_0') && $dislike_count == 0) {
-				$html .= '<span class="counter counter_hide_0"></span>';
+				$html .= $counter . '</span>';
 			} elseif ($this->get_option('hide_counter_total')) {
 				// on n'affiche pas le compteur
 			} else {
-				$html .= '<span class="counter">' . $dislike_count . '</span>';
+				$html .= $counter . $dislike_count . '</span>';
 			}
 			$html .= '</button>';
 		}
